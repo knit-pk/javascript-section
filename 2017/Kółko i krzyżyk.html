@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Kółko i Krzyżyk</title>
+    <style>
+        .board {
+            width: 300px;
+            height: 300px;
+        }
+
+        .board .block {
+            border: 1px solid black;
+            float: left;
+        }
+    </style>
+    <script>
+        function init() {
+            generateboard();
+        }
+        var counter = 0;
+        function generateboard() {
+            var X = +document.getElementById("rozmiarX").value; //wybranie wartości z inputa, '+' dla zamiany ze stringa na inta
+            var board = document.getElementsByClassName("board")[0]; //plansza
+            board.innerHTML = "";
+            var bwidth = getComputedStyle(board).width.slice(0, -2); //ucinanie "px" ze styli
+            var bheight = getComputedStyle(board).height.slice(0, -2);
+            for (var i = 0; i < X; i++) {
+                for (var j = 0; j < X; j++) {
+                    var div = document.createElement("div"); //tworzenie nowego diva
+                    div.style.position = "absolute";
+                    div.style.top = i * (bheight / X) + "px";
+                    div.style.left = j * (bwidth / X) + "px";
+                    div.style.width = (bheight / X) - 2 + "px";
+                    div.style.height = (bwidth / X) - 2 + "px";
+                    div.classList.add("block"); //dodanie klasy ze styli
+                    board.appendChild(div); //dodanie do planszy
+                }
+            }
+            addListeners(); //dodanie listenerów do wszystkich divów
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="board">
+
+    </div>
+    <input type="text" id="rozmiarX" value="3">
+    <button onclick="generateboard();">Generuj</button> 
+</body>
+<script>
+
+    function victoryAlert(counter) {
+        if (counter % 2) 
+            alert("Wygrały czerwone"); 
+        else 
+            alert("Wygrały niebieskie");
+            generateboard();
+        return true;
+    } 
+    function check_victory(boxes) {
+        var x = +document.getElementById("rozmiarX").value;
+        var victory = false;
+        
+        for (var i = 0; i < x; i++) {
+            for (var j = 0; j < x; j++) {
+                var currIndex = i * x + j;
+                if (boxes[currIndex].used != undefined && i < x - 2 && j < x - 2) { //ukos \
+                    if (boxes[currIndex].used == boxes[(i + 1) * x + j + 1].used && boxes[currIndex].used == boxes[(i + 2) * x + j + 2].used)
+                        victory = victoryAlert(counter)
+                }
+                if (boxes[currIndex].used != undefined && i < x - 2 && j+1 > 2) { //ukos /
+                    if (boxes[currIndex].used == boxes[(i + 1) * x + j - 1].used && boxes[currIndex].used == boxes[(i + 2) * x + j - 2].used)
+                        victory = victoryAlert(counter)
+                }
+                if (boxes[currIndex].used != undefined && i < x - 2 ) { // pionowo
+                    if (boxes[currIndex].used == boxes[(i + 1) * x + j].used && boxes[currIndex].used == boxes[(i + 2) * x + j].used)
+                        victory = victoryAlert(counter)
+                }
+                if (boxes[currIndex].used != undefined && j < x - 2 ) { // poziomo
+                    if (boxes[currIndex].used == boxes[i * x + j+1].used && boxes[currIndex].used == boxes[i * x + j+2].used)
+                        victory = victoryAlert(counter)
+                }
+            }
+        }
+        if(counter == x*x && victory == false)  //jak wszystkie użyte i nie wywołąła się funkcja victoryAlert()
+            alert("remis");
+    }   
+    function addListeners() {
+        var boxes = document.getElementsByClassName("block"); //tablica elementów z klasą "block"
+        for (var i = 0; i < boxes.length; i++) {
+            boxes[i].addEventListener("click", function () { //dodawanie do każdego elmentu listenera "click"
+                console.log(this);
+                if (this.used) return; //jak już użyty to wychodzimy z funkcji
+                if (counter % 2) {
+                    this.style.backgroundColor = "blue";
+                    this.used = "player1";
+                }
+                else {
+                    this.style.backgroundColor = "red";
+                    this.used = "player2";
+                }
+
+                counter++;
+                check_victory(boxes); //sprawdzanie wygranej przy kliknięciu
+            })
+        }
+    }
+</script>
+
+</html>
