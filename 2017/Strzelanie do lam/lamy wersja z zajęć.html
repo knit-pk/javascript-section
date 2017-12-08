@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #lama{
+            position: absolute;
+            width: 100px;
+            z-index: 1;
+        }
+        #cursor{
+            position: absolute;
+            z-index: 0;
+                        
+        }
+    </style>
+</head>
+<body>
+    <img src="lama.png" id="lama" alt="lama">
+    <img src="antylama.png" id="cursor" alt="cursor">
+    
+</body>
+<script>
+var windowW = window.innerWidth;
+var windowH = window.innerHeight;
+var lama = document.getElementById("lama");
+var interval = setInterval(function () {
+    var randX = Math.floor((Math.random() * +windowW));
+    var randY = Math.floor((Math.random() * +windowH));
+    lama.style.top = randX + "px";
+    lama.style.left = randY + "px";
+    
+    console.log(randX + " " + randY);
+    //generowanie losowych wartości
+    //wybranie lamy i
+    //zmiana pozycji lamy na te losowe wartości
+},2000)
+lama.onclick = function () {
+    alert("zabita")
+}
+//clearInterval(interval);
+var cursor = document.getElementById("cursor");
+window.onmousemove = function (e) {
+    console.log("X myszy " +e.pageX);
+    console.log("Y myszy " +e.pageY);
+
+    cursor.style.left = e.pageX -50 + "px";
+    cursor.style.top = e.pageY-50 + "px";
+    //wybranie kursora
+    //ustawienie pozycji kursora
+}
+
+
+</script>
+
+</html>
