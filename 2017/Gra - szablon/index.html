@@ -1,0 +1,36 @@
+<html><head>
+        <meta charset="utf-8">
+        <title>Gra</title>
+    <style>
+            * {
+                font-family: tahoma;
+                font-size: 12px;
+                padding: 0px;
+                margin: 0px;
+            }
+            canvas#myCanvas {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+    
+    <body onload="init()">       
+        <canvas id="myCanvas">
+            
+        </canvas> 
+        <script>
+            window.WebSocket = window.WebSocket || window.MozWebSocket;
+            let connection = new WebSocket("ws://127.0.0.1:1337");
+                connection.onopen = function () {
+                    console.log('Connected');
+                }
+    
+                connection.onmessage = function (coords) {
+                    console.log(coords.data);
+                    var loc = JSON.parse(coords.data);
+                game.drawLine(loc.x, loc.y);
+                }
+        </script>
+    
+    </body></html>
